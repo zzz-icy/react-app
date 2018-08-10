@@ -1,17 +1,30 @@
 import React from 'react';
 
-const Action = (props) => {
-    return (
-        <div>
-            <button
-                disabled={!props.hasOption} // if class based should be this.props
-                onClick={props.handlePick}
-            >
-                What should I do?
+// const Action = (props) => {
+//     return (
+//         <div>
+//             <button
+//                 disabled={!props.hasOption} // if class based should be this.props
+//                 onClick={props.handlePick}
+//             >
+//                 What should I do?
+//             </button>
+//         </div>
+//     );
+// };
+
+// refactored to use consice syntax
+const Action = (props) => (
+    <div>
+        <button
+            disabled={!props.hasOption} // if class based should be this.props
+            onClick={props.handlePick}
+        >
+            What should I do?
             </button>
-        </div>
-    );
-};
+    </div>
+);
+;
 
 export default Action;
 

@@ -1,20 +1,19 @@
 import React from 'react';
 
 // can not use export default here
-const Option = (props) => {
-    return (
-        <div>
-            {props.optionText}
-            <button
-                onClick={(e) => {
-                    props.handleDeleteOption(props.optionText);
-                }}
-            >
-                Remove
+const Option = (props) => (
+    <div>
+        {props.optionText}
+        <button
+            onClick={(e) => {
+                props.handleDeleteOption(props.optionText);
+            }}
+        >
+            Remove
             </button>
-        </div>
-    );
-};
+    </div>
+);
+
 
 
 // class Option extends React.Component {
