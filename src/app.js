@@ -21,6 +21,12 @@ class IndecisionApp extends React.Component {
         alert(option);
     }
     handleAddOption(option) {
+        if (!option) {
+            return 'Invalid input!';
+        } else if (this.state.options.indexOf(option) > -1) {  // if >-1, already exists
+            return 'Already exists!';
+        }
+
         this.setState(
             (prevState) => {
                 // prevState.options.push(option) we do not want to mutate the previos state
@@ -59,81 +65,125 @@ class IndecisionApp extends React.Component {
         )
     }
 }
+// can be stateless functional component
+// class Header extends React.Component {  // component is a class itself, must define render function
+//     render() {
 
-class Header extends React.Component {  // component is a class itself, must define render function
-    render() {
+//         return (
+//             <div>
+//                 <h1>{this.props.title}</h1>
+//                 <h2>{this.props.subtitle}</h2>
+//             </div>
+//         );
+//     }
+// }
 
-        return (
-            <div>
-                <h1>{this.props.title}</h1>
-                <h2>{this.props.subtitle}</h2>
-            </div>
-        );
-    }
-}
+// if class based should be this.props
+const Header = (props) => {
+    return (
+        <div>
+            <h1>{props.title}</h1>
+            <h2>{props.subtitle}</h2>
+        </div>
+    );
+};
 
-class Action extends React.Component {
-    // define method
-    // handlePick() {  // this is a method for Action component in new and consice syntax, outside render
-    //     alert('handlepick');
-    // }
-    render() {
+const Action = (props) => {
+    return (
+        <div>
+            <button
+                disabled={!props.hasOption}
+                onClick={props.handlePick}
+            >
+                What should I do?
+            </button>
+        </div>
+    );
+};
 
-        return (
-            <div>
-                <button disabled={!this.props.hasOption} onClick={this.props.handlePick} >What should I do?</button>
-            </div>
-        );
-    }
-}
+const Options = (props) => {
+    return (
+        <div>
+            <button onClick={props.handleDeleteOptions} >Remove All</button>
+            {props.options.map((option) => {
+                return <Option key={option} optionText={option} />;
+            })}
+        </div>
+    );
+};
 
-class Options extends React.Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.handleRemoveAll = this.handleRemoveAll.bind(this); // one way is calling bind() in constructor, the other way is calling bind() inline in render()
-    // }
-    // so how did we break that context, use props in the method but not render method
-    // handleRemoveAll() {
-    //     alert('handle remove all');
-    //     console.log(this.props.options);
-    // console.log(this.props.options); lose the context
-    // example
-    // const func = function () {
-    // console.log(this)
-    // }.bind(this);  get the context back, reset the context
-    // func();   output is undefine, because already lose that context, then hoe to set the binding
-    // Uncaught TypeError: Cannot read property 'props' of undefined
-    // }
-    // render() is also a method of Options component, can not be arrow function, or have no access to handleRemoveAll
+const Option = (props) => {
+    return (
+        <div>
+            <p> {props.optionText} </p>
+        </div>
+    );
+};
+// class Action extends React.Component {
+//     // define method
+//     // handlePick() {  // this is a method for Action component in new and consice syntax, outside render
+//     //     alert('handlepick');
+//     // }
+//     render() {
+
+//         return (
+//             <div>
+//                 <button disabled={!this.props.hasOption} onClick={this.props.handlePick} >What should I do?</button>
+//             </div>
+//         );
+//     }
+// }
+
+// class Options extends React.Component {
+//     // constructor(props) {
+//     //     super(props);
+//     //     this.handleRemoveAll = this.handleRemoveAll.bind(this); // one way is calling bind() in constructor, the other way is calling bind() inline in render()
+//     // }
+//     // so how did we break that context, use props in the method but not render method
+//     // handleRemoveAll() {
+//     //     alert('handle remove all');
+//     //     console.log(this.props.options);
+//     // console.log(this.props.options); lose the context
+//     // example
+//     // const func = function () {
+//     // console.log(this)
+//     // }.bind(this);  get the context back, reset the context
+//     // func();   output is undefine, because already lose that context, then hoe to set the binding
+//     // Uncaught TypeError: Cannot read property 'props' of undefined
+//     // }
+//     // render() is also a method of Options component, can not be arrow function, or have no access to handleRemoveAll
 
 
-    render() {
-        return (
-            <div>
-                <button onClick={this.props.handleDeleteOptions} >Remove All</button>
-                {this.props.options.map((option) => {
-                    return <Option key={option} optionText={option} />;
-                })}
-            </div>
-        );
-    }
-}
+//     render() {
+//         return (
+//             <div>
+//                 <button onClick={this.props.handleDeleteOptions} >Remove All</button>
+//                 {this.props.options.map((option) => {
+//                     return <Option key={option} optionText={option} />;
+//                 })}
+//             </div>
+//         );
+//     }
+// }
 
-class Option extends React.Component {
-    render() {
-        return (
-            <div>
-                <p> {this.props.optionText} </p>
-            </div>
-        );
-    }
-}
+// class Option extends React.Component {
+//     render() {
+//         return (
+//             <div>
+//                 <p> {this.props.optionText} </p>
+//             </div>
+//         );
+//     }
+// }
 
 class AddOption extends React.Component {
     constructor(props) {
         super(props);
         this.handleAddOption = this.handleAddOption.bind(this);
         // the handleAddOption here refers to the method defined within AddOption component, not the props passed in
+        this.state = {
+            error: undefined,
+        }
     }
 
     handleAddOption(e) {
@@ -142,21 +192,29 @@ class AddOption extends React.Component {
         const option = e.target.elements.option.value.trim();
         // .trim() take off spaces not internal
         // e.target is gonna point to the element the event started on
-        if (option) {
-            // 
-            // this.setState((prevState) => {
-            //     return {
-            //         options: prevState.options.push(option),
-            //     };
-            // }
-            // );
-            this.props.handleAddOption(option); // call the props function here
-            // e.target.elements.option.value = '';
-        }
+        // if (option) { // nolonger need if condition here, it's handled up above in the parent component
+        // 
+        // this.setState((prevState) => {
+        //     return {
+        //         options: prevState.options.push(option),
+        //     };
+        // }
+        // );
+        // this.props.handleAddOption(option); // call the props function here
+        // e.target.elements.option.value = '';
+        const error = this.props.handleAddOption(option);
+        this.setState({
+            error: error,
+            // error   ES6 object shorthand
+        });
+        e.target.elements.option.value = '';
+
     }
+
     render() {
         return (
             <div>
+                {this.state.error && <p>{this.state.error}</p>}
                 <form onSubmit={this.handleAddOption}>
 
                     <input type='text' name='option' />

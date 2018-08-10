@@ -44,6 +44,13 @@ var IndecisionApp = function (_React$Component) {
     }, {
         key: 'handleAddOption',
         value: function handleAddOption(option) {
+            if (!option) {
+                return 'Invalid input!';
+            } else if (this.state.options.indexOf(option) > -1) {
+                // if >-1, already exists
+                return 'Already exists!';
+            }
+
             this.setState(function (prevState) {
                 // prevState.options.push(option) we do not want to mutate the previos state
                 // create a new array, concat arrays
@@ -82,164 +89,153 @@ var IndecisionApp = function (_React$Component) {
 
     return IndecisionApp;
 }(React.Component);
+// can be stateless functional component
+// class Header extends React.Component {  // component is a class itself, must define render function
+//     render() {
 
-var Header = function (_React$Component2) {
-    _inherits(Header, _React$Component2);
+//         return (
+//             <div>
+//                 <h1>{this.props.title}</h1>
+//                 <h2>{this.props.subtitle}</h2>
+//             </div>
+//         );
+//     }
+// }
 
-    function Header() {
-        _classCallCheck(this, Header);
-
-        return _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).apply(this, arguments));
-    }
-
-    _createClass(Header, [{
-        key: 'render',
-        // component is a class itself, must define render function
-        value: function render() {
-
-            return React.createElement(
-                'div',
-                null,
-                React.createElement(
-                    'h1',
-                    null,
-                    this.props.title
-                ),
-                React.createElement(
-                    'h2',
-                    null,
-                    this.props.subtitle
-                )
-            );
-        }
-    }]);
-
-    return Header;
-}(React.Component);
-
-var Action = function (_React$Component3) {
-    _inherits(Action, _React$Component3);
-
-    function Action() {
-        _classCallCheck(this, Action);
-
-        return _possibleConstructorReturn(this, (Action.__proto__ || Object.getPrototypeOf(Action)).apply(this, arguments));
-    }
-
-    _createClass(Action, [{
-        key: 'render',
-
-        // define method
-        // handlePick() {  // this is a method for Action component in new and consice syntax, outside render
-        //     alert('handlepick');
-        // }
-        value: function render() {
-
-            return React.createElement(
-                'div',
-                null,
-                React.createElement(
-                    'button',
-                    { disabled: !this.props.hasOption, onClick: this.props.handlePick },
-                    'What should I do?'
-                )
-            );
-        }
-    }]);
-
-    return Action;
-}(React.Component);
-
-var Options = function (_React$Component4) {
-    _inherits(Options, _React$Component4);
-
-    function Options() {
-        _classCallCheck(this, Options);
-
-        return _possibleConstructorReturn(this, (Options.__proto__ || Object.getPrototypeOf(Options)).apply(this, arguments));
-    }
-
-    _createClass(Options, [{
-        key: 'render',
-
-        // constructor(props) {
-        //     super(props);
-        //     this.handleRemoveAll = this.handleRemoveAll.bind(this); // one way is calling bind() in constructor, the other way is calling bind() inline in render()
-        // }
-        // so how did we break that context, use props in the method but not render method
-        // handleRemoveAll() {
-        //     alert('handle remove all');
-        //     console.log(this.props.options);
-        // console.log(this.props.options); lose the context
-        // example
-        // const func = function () {
-        // console.log(this)
-        // }.bind(this);  get the context back, reset the context
-        // func();   output is undefine, because already lose that context, then hoe to set the binding
-        // Uncaught TypeError: Cannot read property 'props' of undefined
-        // }
-        // render() is also a method of Options component, can not be arrow function, or have no access to handleRemoveAll
+// if class based should be this.props
 
 
-        value: function render() {
-            return React.createElement(
-                'div',
-                null,
-                React.createElement(
-                    'button',
-                    { onClick: this.props.handleDeleteOptions },
-                    'Remove All'
-                ),
-                this.props.options.map(function (option) {
-                    return React.createElement(Option, { key: option, optionText: option });
-                })
-            );
-        }
-    }]);
+var Header = function Header(props) {
+    return React.createElement(
+        'div',
+        null,
+        React.createElement(
+            'h1',
+            null,
+            props.title
+        ),
+        React.createElement(
+            'h2',
+            null,
+            props.subtitle
+        )
+    );
+};
 
-    return Options;
-}(React.Component);
+var Action = function Action(props) {
+    return React.createElement(
+        'div',
+        null,
+        React.createElement(
+            'button',
+            {
+                disabled: !props.hasOption,
+                onClick: props.handlePick
+            },
+            'What should I do?'
+        )
+    );
+};
 
-var Option = function (_React$Component5) {
-    _inherits(Option, _React$Component5);
+var Options = function Options(props) {
+    return React.createElement(
+        'div',
+        null,
+        React.createElement(
+            'button',
+            { onClick: props.handleDeleteOptions },
+            'Remove All'
+        ),
+        props.options.map(function (option) {
+            return React.createElement(Option, { key: option, optionText: option });
+        })
+    );
+};
 
-    function Option() {
-        _classCallCheck(this, Option);
+var Option = function Option(props) {
+    return React.createElement(
+        'div',
+        null,
+        React.createElement(
+            'p',
+            null,
+            ' ',
+            props.optionText,
+            ' '
+        )
+    );
+};
+// class Action extends React.Component {
+//     // define method
+//     // handlePick() {  // this is a method for Action component in new and consice syntax, outside render
+//     //     alert('handlepick');
+//     // }
+//     render() {
 
-        return _possibleConstructorReturn(this, (Option.__proto__ || Object.getPrototypeOf(Option)).apply(this, arguments));
-    }
+//         return (
+//             <div>
+//                 <button disabled={!this.props.hasOption} onClick={this.props.handlePick} >What should I do?</button>
+//             </div>
+//         );
+//     }
+// }
 
-    _createClass(Option, [{
-        key: 'render',
-        value: function render() {
-            return React.createElement(
-                'div',
-                null,
-                React.createElement(
-                    'p',
-                    null,
-                    ' ',
-                    this.props.optionText,
-                    ' '
-                )
-            );
-        }
-    }]);
+// class Options extends React.Component {
+//     // constructor(props) {
+//     //     super(props);
+//     //     this.handleRemoveAll = this.handleRemoveAll.bind(this); // one way is calling bind() in constructor, the other way is calling bind() inline in render()
+//     // }
+//     // so how did we break that context, use props in the method but not render method
+//     // handleRemoveAll() {
+//     //     alert('handle remove all');
+//     //     console.log(this.props.options);
+//     // console.log(this.props.options); lose the context
+//     // example
+//     // const func = function () {
+//     // console.log(this)
+//     // }.bind(this);  get the context back, reset the context
+//     // func();   output is undefine, because already lose that context, then hoe to set the binding
+//     // Uncaught TypeError: Cannot read property 'props' of undefined
+//     // }
+//     // render() is also a method of Options component, can not be arrow function, or have no access to handleRemoveAll
 
-    return Option;
-}(React.Component);
 
-var AddOption = function (_React$Component6) {
-    _inherits(AddOption, _React$Component6);
+//     render() {
+//         return (
+//             <div>
+//                 <button onClick={this.props.handleDeleteOptions} >Remove All</button>
+//                 {this.props.options.map((option) => {
+//                     return <Option key={option} optionText={option} />;
+//                 })}
+//             </div>
+//         );
+//     }
+// }
+
+// class Option extends React.Component {
+//     render() {
+//         return (
+//             <div>
+//                 <p> {this.props.optionText} </p>
+//             </div>
+//         );
+//     }
+// }
+
+var AddOption = function (_React$Component2) {
+    _inherits(AddOption, _React$Component2);
 
     function AddOption(props) {
         _classCallCheck(this, AddOption);
 
-        var _this6 = _possibleConstructorReturn(this, (AddOption.__proto__ || Object.getPrototypeOf(AddOption)).call(this, props));
+        var _this2 = _possibleConstructorReturn(this, (AddOption.__proto__ || Object.getPrototypeOf(AddOption)).call(this, props));
 
-        _this6.handleAddOption = _this6.handleAddOption.bind(_this6);
+        _this2.handleAddOption = _this2.handleAddOption.bind(_this2);
         // the handleAddOption here refers to the method defined within AddOption component, not the props passed in
-        return _this6;
+        _this2.state = {
+            error: undefined
+        };
+        return _this2;
     }
 
     _createClass(AddOption, [{
@@ -250,17 +246,22 @@ var AddOption = function (_React$Component6) {
             var option = e.target.elements.option.value.trim();
             // .trim() take off spaces not internal
             // e.target is gonna point to the element the event started on
-            if (option) {
-                // 
-                // this.setState((prevState) => {
-                //     return {
-                //         options: prevState.options.push(option),
-                //     };
-                // }
-                // );
-                this.props.handleAddOption(option); // call the props function here
-                // e.target.elements.option.value = '';
-            }
+            // if (option) { // nolonger need if condition here, it's handled up above in the parent component
+            // 
+            // this.setState((prevState) => {
+            //     return {
+            //         options: prevState.options.push(option),
+            //     };
+            // }
+            // );
+            // this.props.handleAddOption(option); // call the props function here
+            // e.target.elements.option.value = '';
+            var error = this.props.handleAddOption(option);
+            this.setState({
+                error: error
+                // error   ES6 object shorthand
+            });
+            e.target.elements.option.value = '';
         }
     }, {
         key: 'render',
@@ -268,6 +269,11 @@ var AddOption = function (_React$Component6) {
             return React.createElement(
                 'div',
                 null,
+                this.state.error && React.createElement(
+                    'p',
+                    null,
+                    this.state.error
+                ),
                 React.createElement(
                     'form',
                     { onSubmit: this.handleAddOption },
