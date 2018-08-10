@@ -32,6 +32,7 @@ class Header extends React.Component {  // component is a class itself, must def
 }
 
 class Action extends React.Component {
+    // define method
     handlePick() {  // this is a method for Action component in new and consice syntax, outside render
         alert('handlepick');
     }
@@ -46,9 +47,27 @@ class Action extends React.Component {
 }
 
 class Options extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleRemoveAll = this.handleRemoveAll.bind(this);
+    }
+
+    handleRemoveAll() {
+        alert('handle remove all');
+        console.log(this.props.options);
+        // console.log(this.props.options); lose the context
+        // example
+        // const func = function () {
+        // console.log(this)
+        // }.bind(this);  get the context back, reset the context
+        // func();   output is undefine, because already lose that context, then hoe to set the binding
+        // Uncaught TypeError: Cannot read property 'props' of undefined
+    }
+    // render() is also a method of Options component, can not be arrow function, or have no access to handleRemoveAll
     render() {
         return (
             <div>
+                <button onClick={this.handleRemoveAll} >Remove All</button>
                 {this.props.options.map((option) => {
                     return <Option key={option} optionText={option} />;
                 })}
@@ -68,10 +87,27 @@ class Option extends React.Component {
 }
 
 class AddOption extends React.Component {
+    handlAddOption(e) {
+        e.preventDefault(); // this will stop the full page refreshing
+        // console.log(e);
+        const option = e.target.elements.option.value.trim();
+        // .trim() take off spaces not internal
+        // e.target is gonna point to the element the event started on
+        if (option) {
+            // 
+            alert(option);
+            e.target.elements.option.value = '';
+        }
+    }
     render() {
         return (
             <div>
-                <button>AddOption</button>
+                <form onSubmit={this.handlAddOption}>
+
+                    <input type='text' name='option' />
+                    <button >Add Option</button>
+
+                </form>
             </div>
         );
     }

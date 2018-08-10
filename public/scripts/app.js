@@ -87,6 +87,8 @@ var Action = function (_React$Component3) {
 
     _createClass(Action, [{
         key: 'handlePick',
+
+        // define method
         value: function handlePick() {
             // this is a method for Action component in new and consice syntax, outside render
             alert('handlepick');
@@ -113,18 +115,41 @@ var Action = function (_React$Component3) {
 var Options = function (_React$Component4) {
     _inherits(Options, _React$Component4);
 
-    function Options() {
+    function Options(props) {
         _classCallCheck(this, Options);
 
-        return _possibleConstructorReturn(this, (Options.__proto__ || Object.getPrototypeOf(Options)).apply(this, arguments));
+        var _this4 = _possibleConstructorReturn(this, (Options.__proto__ || Object.getPrototypeOf(Options)).call(this, props));
+
+        _this4.handleRemoveAll = _this4.handleRemoveAll.bind(_this4);
+        return _this4;
     }
 
     _createClass(Options, [{
+        key: 'handleRemoveAll',
+        value: function handleRemoveAll() {
+            alert('handle remove all');
+            console.log(this.props.options);
+            // console.log(this.props.options); lose the context
+            // example
+            // const func = function () {
+            // console.log(this)
+            // }.bind(this);  get the context back, reset the context
+            // func();   output is undefine, because already lose that context, then hoe to set the binding
+            // Uncaught TypeError: Cannot read property 'props' of undefined
+        }
+        // render() is also a method of Options component, can not be arrow function, or have no access to handleRemoveAll
+
+    }, {
         key: 'render',
         value: function render() {
             return React.createElement(
                 'div',
                 null,
+                React.createElement(
+                    'button',
+                    { onClick: this.handleRemoveAll },
+                    'Remove All'
+                ),
                 this.props.options.map(function (option) {
                     return React.createElement(Option, { key: option, optionText: option });
                 })
@@ -174,15 +199,34 @@ var AddOption = function (_React$Component6) {
     }
 
     _createClass(AddOption, [{
+        key: 'handlAddOption',
+        value: function handlAddOption(e) {
+            e.preventDefault(); // this will stop the full page refreshing
+            // console.log(e);
+            var option = e.target.elements.option.value.trim();
+            // .trim() take off spaces not internal
+            // e.target is gonna point to the element the event started on
+            if (option) {
+                // 
+                alert(option);
+                e.target.elements.option.value = '';
+            }
+        }
+    }, {
         key: 'render',
         value: function render() {
             return React.createElement(
                 'div',
                 null,
                 React.createElement(
-                    'button',
-                    null,
-                    'AddOption'
+                    'form',
+                    { onSubmit: this.handlAddOption },
+                    React.createElement('input', { type: 'text', name: 'option' }),
+                    React.createElement(
+                        'button',
+                        null,
+                        'Add Option'
+                    )
                 )
             );
         }
