@@ -11,19 +11,54 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var IndecisionApp = function (_React$Component) {
     _inherits(IndecisionApp, _React$Component);
 
-    function IndecisionApp() {
+    function IndecisionApp(props) {
         _classCallCheck(this, IndecisionApp);
 
-        return _possibleConstructorReturn(this, (IndecisionApp.__proto__ || Object.getPrototypeOf(IndecisionApp)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (IndecisionApp.__proto__ || Object.getPrototypeOf(IndecisionApp)).call(this, props));
+
+        _this.handleDeleteOptions = _this.handleDeleteOptions.bind(_this);
+        _this.handleAddOption = _this.handleAddOption.bind(_this);
+        _this.handlePick = _this.handlePick.bind(_this);
+
+        _this.state = {
+            // options: ['Thing One', 'Thing Two', 'Thing Three', 'Thing Four'],
+            options: []
+        };
+        return _this;
     }
 
     _createClass(IndecisionApp, [{
+        key: 'handleDeleteOptions',
+        value: function handleDeleteOptions() {
+            this.setState({
+                options: []
+            });
+        }
+    }, {
+        key: 'handlePick',
+        value: function handlePick() {
+            var randomNum = Math.floor(Math.random() * this.state.options.length); // 0 - 1.99999, needs to be rounded
+            var option = this.state.options[randomNum];
+            alert(option);
+        }
+    }, {
+        key: 'handleAddOption',
+        value: function handleAddOption(option) {
+            this.setState(function (prevState) {
+                // prevState.options.push(option) we do not want to mutate the previos state
+                // create a new array, concat arrays
+                var newOptions = prevState.options.concat([option]);
+                return {
+                    options: newOptions
+                };
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
 
             var title = 'Indecision';
             var subtitle = 'Put your life in the hands of  computer!';
-            var options = ['Thing One', 'Thing Two', 'Thing Three'];
             var headerProps = {
                 title: title,
                 subtitle: subtitle
@@ -32,9 +67,15 @@ var IndecisionApp = function (_React$Component) {
                 'div',
                 null,
                 React.createElement(Header, headerProps),
-                React.createElement(Action, null),
-                React.createElement(Options, { options: options }),
-                React.createElement(AddOption, null)
+                React.createElement(Action, {
+                    hasOption: this.state.options.length > 0,
+                    handlePick: this.handlePick }),
+                React.createElement(Options, {
+                    options: this.state.options,
+                    handleDeleteOptions: this.handleDeleteOptions }),
+                React.createElement(AddOption, {
+                    options: this.state.options,
+                    handleAddOption: this.handleAddOption })
             );
         }
     }]);
@@ -86,15 +127,12 @@ var Action = function (_React$Component3) {
     }
 
     _createClass(Action, [{
-        key: 'handlePick',
+        key: 'render',
 
         // define method
-        value: function handlePick() {
-            // this is a method for Action component in new and consice syntax, outside render
-            alert('handlepick');
-        }
-    }, {
-        key: 'render',
+        // handlePick() {  // this is a method for Action component in new and consice syntax, outside render
+        //     alert('handlepick');
+        // }
         value: function render() {
 
             return React.createElement(
@@ -102,7 +140,7 @@ var Action = function (_React$Component3) {
                 null,
                 React.createElement(
                     'button',
-                    { onClick: this.handlePick },
+                    { disabled: !this.props.hasOption, onClick: this.props.handlePick },
                     'What should I do?'
                 )
             );
@@ -115,39 +153,41 @@ var Action = function (_React$Component3) {
 var Options = function (_React$Component4) {
     _inherits(Options, _React$Component4);
 
-    function Options(props) {
+    function Options() {
         _classCallCheck(this, Options);
 
-        var _this4 = _possibleConstructorReturn(this, (Options.__proto__ || Object.getPrototypeOf(Options)).call(this, props));
-
-        _this4.handleRemoveAll = _this4.handleRemoveAll.bind(_this4);
-        return _this4;
+        return _possibleConstructorReturn(this, (Options.__proto__ || Object.getPrototypeOf(Options)).apply(this, arguments));
     }
 
     _createClass(Options, [{
-        key: 'handleRemoveAll',
-        value: function handleRemoveAll() {
-            alert('handle remove all');
-            console.log(this.props.options);
-            // console.log(this.props.options); lose the context
-            // example
-            // const func = function () {
-            // console.log(this)
-            // }.bind(this);  get the context back, reset the context
-            // func();   output is undefine, because already lose that context, then hoe to set the binding
-            // Uncaught TypeError: Cannot read property 'props' of undefined
-        }
+        key: 'render',
+
+        // constructor(props) {
+        //     super(props);
+        //     this.handleRemoveAll = this.handleRemoveAll.bind(this); // one way is calling bind() in constructor, the other way is calling bind() inline in render()
+        // }
+        // so how did we break that context, use props in the method but not render method
+        // handleRemoveAll() {
+        //     alert('handle remove all');
+        //     console.log(this.props.options);
+        // console.log(this.props.options); lose the context
+        // example
+        // const func = function () {
+        // console.log(this)
+        // }.bind(this);  get the context back, reset the context
+        // func();   output is undefine, because already lose that context, then hoe to set the binding
+        // Uncaught TypeError: Cannot read property 'props' of undefined
+        // }
         // render() is also a method of Options component, can not be arrow function, or have no access to handleRemoveAll
 
-    }, {
-        key: 'render',
+
         value: function render() {
             return React.createElement(
                 'div',
                 null,
                 React.createElement(
                     'button',
-                    { onClick: this.handleRemoveAll },
+                    { onClick: this.props.handleDeleteOptions },
                     'Remove All'
                 ),
                 this.props.options.map(function (option) {
@@ -192,15 +232,19 @@ var Option = function (_React$Component5) {
 var AddOption = function (_React$Component6) {
     _inherits(AddOption, _React$Component6);
 
-    function AddOption() {
+    function AddOption(props) {
         _classCallCheck(this, AddOption);
 
-        return _possibleConstructorReturn(this, (AddOption.__proto__ || Object.getPrototypeOf(AddOption)).apply(this, arguments));
+        var _this6 = _possibleConstructorReturn(this, (AddOption.__proto__ || Object.getPrototypeOf(AddOption)).call(this, props));
+
+        _this6.handleAddOption = _this6.handleAddOption.bind(_this6);
+        // the handleAddOption here refers to the method defined within AddOption component, not the props passed in
+        return _this6;
     }
 
     _createClass(AddOption, [{
-        key: 'handlAddOption',
-        value: function handlAddOption(e) {
+        key: 'handleAddOption',
+        value: function handleAddOption(e) {
             e.preventDefault(); // this will stop the full page refreshing
             // console.log(e);
             var option = e.target.elements.option.value.trim();
@@ -208,8 +252,14 @@ var AddOption = function (_React$Component6) {
             // e.target is gonna point to the element the event started on
             if (option) {
                 // 
-                alert(option);
-                e.target.elements.option.value = '';
+                // this.setState((prevState) => {
+                //     return {
+                //         options: prevState.options.push(option),
+                //     };
+                // }
+                // );
+                this.props.handleAddOption(option); // call the props function here
+                // e.target.elements.option.value = '';
             }
         }
     }, {
@@ -220,7 +270,7 @@ var AddOption = function (_React$Component6) {
                 null,
                 React.createElement(
                     'form',
-                    { onSubmit: this.handlAddOption },
+                    { onSubmit: this.handleAddOption },
                     React.createElement('input', { type: 'text', name: 'option' }),
                     React.createElement(
                         'button',
@@ -236,61 +286,3 @@ var AddOption = function (_React$Component6) {
 }(React.Component);
 
 ReactDOM.render(React.createElement(IndecisionApp, null), document.getElementById('app'));
-
-// console.log('app.js is running');
-// // JSX javascript XML
-// // babel compile ES6 to ES5 javascript
-// const app = {
-//     title: 'Indecision App',
-//     subtitle: 'Put your life in the hands of computer',
-//     options: [],
-// };
-
-// const onFormSubmit = (e) => {   // add the event object
-//     e.preventDefault(); // this will stop the full page refreshing
-//     console.log(e);
-//     const option = e.target.elements.option.value;  // e.target is gonna point to the element the event started on
-//     if (option) {
-//         app.options.push(option);
-//         e.target.elements.option.value = ''; // clear the input
-//     }
-// };
-
-// const onRemoveAll = () => {
-//     app.options = [];
-// }
-
-// const onMakeDecision = () => {
-//     const randomNum = Math.floor(Math.random() * app.options.length); // 0 - 1.99999, needs to be rounded
-//     const option = app.options[randomNum];
-//     alert(option);
-// }
-
-// const template = (
-//     <div>
-//         <h1>{app.title}</h1>
-//         {app.subtitle && <p> {app.subtitle} </p>}
-//         <p>{app.options.length > 0 ? 'Here are your options: ' : 'No options'}</p>
-
-//         <form onSubmit={onFormSubmit}>
-//             <button disabled={app.options.length === 0} onClick={onMakeDecision}>What should I do?</button>
-
-//             <button onClick={onRemoveAll}>Remove All</button>
-//             <ol>
-//                 {
-//                     app.options.map((option) => (
-//                         <li key={option}>{option}</li>
-//                     ))
-//                 }
-//             </ol>
-//             <input type='text' name='option' />
-
-//             <button >Add Option</button>
-//         </form>
-//     </div >
-// );
-
-
-// const appRoot = document.getElementById('app');
-
-// ReactDOM.render(template, appRoot);

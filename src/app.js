@@ -1,9 +1,41 @@
 class IndecisionApp extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleDeleteOptions = this.handleDeleteOptions.bind(this);
+        this.handleAddOption = this.handleAddOption.bind(this);
+        this.handlePick = this.handlePick.bind(this);
+
+        this.state = {
+            // options: ['Thing One', 'Thing Two', 'Thing Three', 'Thing Four'],
+            options: [],
+        }
+    }
+    handleDeleteOptions() {
+        this.setState({
+            options: [],
+        });
+    }
+    handlePick() {
+        const randomNum = Math.floor(Math.random() * this.state.options.length); // 0 - 1.99999, needs to be rounded
+        const option = this.state.options[randomNum];
+        alert(option);
+    }
+    handleAddOption(option) {
+        this.setState(
+            (prevState) => {
+                // prevState.options.push(option) we do not want to mutate the previos state
+                // create a new array, concat arrays
+                const newOptions = prevState.options.concat([option]);
+                return {
+                    options: newOptions,
+                }
+            }
+        );
+    }
     render() {
 
         const title = 'Indecision';
         const subtitle = 'Put your life in the hands of  computer!';
-        const options = ['Thing One', 'Thing Two', 'Thing Three'];
         const headerProps = {
             title: title,
             subtitle: subtitle,
@@ -11,9 +43,18 @@ class IndecisionApp extends React.Component {
         return (
             <div>
                 <Header {...headerProps} />
-                <Action />
-                <Options options={options} />
-                <AddOption />
+
+                <Action
+                    hasOption={this.state.options.length > 0}
+                    handlePick={this.handlePick} />
+
+                <Options
+                    options={this.state.options}
+                    handleDeleteOptions={this.handleDeleteOptions} />
+
+                <AddOption
+                    options={this.state.options}
+                    handleAddOption={this.handleAddOption} />
             </div>
         )
     }
@@ -33,41 +74,43 @@ class Header extends React.Component {  // component is a class itself, must def
 
 class Action extends React.Component {
     // define method
-    handlePick() {  // this is a method for Action component in new and consice syntax, outside render
-        alert('handlepick');
-    }
+    // handlePick() {  // this is a method for Action component in new and consice syntax, outside render
+    //     alert('handlepick');
+    // }
     render() {
 
         return (
             <div>
-                <button onClick={this.handlePick} >What should I do?</button>
+                <button disabled={!this.props.hasOption} onClick={this.props.handlePick} >What should I do?</button>
             </div>
         );
     }
 }
 
 class Options extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleRemoveAll = this.handleRemoveAll.bind(this);
-    }
-
-    handleRemoveAll() {
-        alert('handle remove all');
-        console.log(this.props.options);
-        // console.log(this.props.options); lose the context
-        // example
-        // const func = function () {
-        // console.log(this)
-        // }.bind(this);  get the context back, reset the context
-        // func();   output is undefine, because already lose that context, then hoe to set the binding
-        // Uncaught TypeError: Cannot read property 'props' of undefined
-    }
+    // constructor(props) {
+    //     super(props);
+    //     this.handleRemoveAll = this.handleRemoveAll.bind(this); // one way is calling bind() in constructor, the other way is calling bind() inline in render()
+    // }
+    // so how did we break that context, use props in the method but not render method
+    // handleRemoveAll() {
+    //     alert('handle remove all');
+    //     console.log(this.props.options);
+    // console.log(this.props.options); lose the context
+    // example
+    // const func = function () {
+    // console.log(this)
+    // }.bind(this);  get the context back, reset the context
+    // func();   output is undefine, because already lose that context, then hoe to set the binding
+    // Uncaught TypeError: Cannot read property 'props' of undefined
+    // }
     // render() is also a method of Options component, can not be arrow function, or have no access to handleRemoveAll
+
+
     render() {
         return (
             <div>
-                <button onClick={this.handleRemoveAll} >Remove All</button>
+                <button onClick={this.props.handleDeleteOptions} >Remove All</button>
                 {this.props.options.map((option) => {
                     return <Option key={option} optionText={option} />;
                 })}
@@ -87,7 +130,13 @@ class Option extends React.Component {
 }
 
 class AddOption extends React.Component {
-    handlAddOption(e) {
+    constructor(props) {
+        super(props);
+        this.handleAddOption = this.handleAddOption.bind(this);
+        // the handleAddOption here refers to the method defined within AddOption component, not the props passed in
+    }
+
+    handleAddOption(e) {
         e.preventDefault(); // this will stop the full page refreshing
         // console.log(e);
         const option = e.target.elements.option.value.trim();
@@ -95,14 +144,20 @@ class AddOption extends React.Component {
         // e.target is gonna point to the element the event started on
         if (option) {
             // 
-            alert(option);
-            e.target.elements.option.value = '';
+            // this.setState((prevState) => {
+            //     return {
+            //         options: prevState.options.push(option),
+            //     };
+            // }
+            // );
+            this.props.handleAddOption(option); // call the props function here
+            // e.target.elements.option.value = '';
         }
     }
     render() {
         return (
             <div>
-                <form onSubmit={this.handlAddOption}>
+                <form onSubmit={this.handleAddOption}>
 
                     <input type='text' name='option' />
                     <button >Add Option</button>
@@ -115,69 +170,3 @@ class AddOption extends React.Component {
 
 
 ReactDOM.render(<IndecisionApp />, document.getElementById('app'));
-
-
-
-
-
-
-
-
-
-// console.log('app.js is running');
-// // JSX javascript XML
-// // babel compile ES6 to ES5 javascript
-// const app = {
-//     title: 'Indecision App',
-//     subtitle: 'Put your life in the hands of computer',
-//     options: [],
-// };
-
-// const onFormSubmit = (e) => {   // add the event object
-//     e.preventDefault(); // this will stop the full page refreshing
-//     console.log(e);
-//     const option = e.target.elements.option.value;  // e.target is gonna point to the element the event started on
-//     if (option) {
-//         app.options.push(option);
-//         e.target.elements.option.value = ''; // clear the input
-//     }
-// };
-
-// const onRemoveAll = () => {
-//     app.options = [];
-// }
-
-// const onMakeDecision = () => {
-//     const randomNum = Math.floor(Math.random() * app.options.length); // 0 - 1.99999, needs to be rounded
-//     const option = app.options[randomNum];
-//     alert(option);
-// }
-
-// const template = (
-//     <div>
-//         <h1>{app.title}</h1>
-//         {app.subtitle && <p> {app.subtitle} </p>}
-//         <p>{app.options.length > 0 ? 'Here are your options: ' : 'No options'}</p>
-
-//         <form onSubmit={onFormSubmit}>
-//             <button disabled={app.options.length === 0} onClick={onMakeDecision}>What should I do?</button>
-
-//             <button onClick={onRemoveAll}>Remove All</button>
-//             <ol>
-//                 {
-//                     app.options.map((option) => (
-//                         <li key={option}>{option}</li>
-//                     ))
-//                 }
-//             </ol>
-//             <input type='text' name='option' />
-
-//             <button >Add Option</button>
-//         </form>
-//     </div >
-// );
-
-
-// const appRoot = document.getElementById('app');
-
-// ReactDOM.render(template, appRoot);
