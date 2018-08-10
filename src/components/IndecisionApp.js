@@ -7,18 +7,22 @@ import Header from './Header';
 import Action from './Action';
 
 export default class IndecisionApp extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleDeleteOptions = this.handleDeleteOptions.bind(this);
-        this.handleAddOption = this.handleAddOption.bind(this);
-        this.handlePick = this.handlePick.bind(this);
-        this.handleDeleteOption = this.handleDeleteOption.bind(this);
-
-        this.state = {
-            // options: ['Thing One', 'Thing Two', 'Thing Three', 'Thing Four'],
-            options: props.options,
-        }
+    state = {
+        // options: ['Thing One', 'Thing Two', 'Thing Three', 'Thing Four'],
+        options: this.props.options,
     }
+    // constructor(props) {
+    //     super(props);
+    //     this.handleDeleteOptions = this.handleDeleteOptions.bind(this);
+    //     this.handleAddOption = this.handleAddOption.bind(this);
+    //     this.handlePick = this.handlePick.bind(this);
+    //     this.handleDeleteOption = this.handleDeleteOption.bind(this);
+
+    //     this.state = {
+    //         // options: ['Thing One', 'Thing Two', 'Thing Three', 'Thing Four'],
+    //         options: props.options,
+    //     }
+    // }
     // the very first time app got rendered 
     componentDidMount() {
         try {
@@ -47,25 +51,25 @@ export default class IndecisionApp extends React.Component {
 
     }
 
-    handleDeleteOptions() {
+    handleDeleteOptions = () => {
         this.setState({
             options: [],
         });
     }
 
-    handleDeleteOption(optionToRemove) {
+    handleDeleteOption = (optionToRemove) => {
         this.setState((prevState) => ({
             options: prevState.options.filter((option) => optionToRemove !== option)
         }));
     }
 
-    handlePick() {
+    handlePick = () => {
         const randomNum = Math.floor(Math.random() * this.state.options.length); // 0 - 1.99999, needs to be rounded
         const option = this.state.options[randomNum];
         alert(option);
     }
 
-    handleAddOption(option) {
+    handleAddOption = (option) => {
         if (!option) {
             return 'Invalid input!';
         } else if (this.state.options.indexOf(option) > -1) {  // if >-1, already exists

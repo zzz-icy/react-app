@@ -2,16 +2,19 @@ import React from 'react';
 // import ReactDOM from 'react-dom';
 
 export default class AddOption extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleAddOption = this.handleAddOption.bind(this);
-        // the handleAddOption here refers to the method defined within AddOption component, not the props passed in
-        this.state = {
-            error: undefined,
-        }
+    state = {
+        error: undefined,
     }
+    // constructor(props) {
+    //     super(props);
+    //     this.handleAddOption = this.handleAddOption.bind(this);
+    // the handleAddOption here refers to the method defined within AddOption component, not the props passed in
+    // this.state = {
+    //     error: undefined,
+    // }
+    // }
 
-    handleAddOption(e) {
+    handleAddOption = (e) => { // make it a arrow function, because arrow function has no data binding 
         e.preventDefault(); // this will stop the full page refreshing
         // console.log(e);
         const option = e.target.elements.option.value.trim();
