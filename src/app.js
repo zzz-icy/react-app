@@ -2,8 +2,20 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Modal from 'react-modal';
+
 
 import IndecisionApp from './components/IndecisionApp';
 
+const Layout = (props) => {
+    return (
+        <div>
+            <p>Header</p>
+            {props.children}
+            <p>Footer</p>
 
-ReactDOM.render(<IndecisionApp />, document.getElementById('app'));
+        </div>
+    );
+};
+
+ReactDOM.render(<Layout><IndecisionApp /></Layout>, document.getElementById('app'));

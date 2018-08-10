@@ -5,11 +5,14 @@ import AddOption from './AddOption';
 import Options from './Options';
 import Header from './Header';
 import Action from './Action';
+import OptionModal from './OptionModal';
+
 
 export default class IndecisionApp extends React.Component {
     state = {
         // options: ['Thing One', 'Thing Two', 'Thing Three', 'Thing Four'],
         options: this.props.options,
+        selectedOption: undefined,
     }
     // constructor(props) {
     //     super(props);
@@ -66,7 +69,9 @@ export default class IndecisionApp extends React.Component {
     handlePick = () => {
         const randomNum = Math.floor(Math.random() * this.state.options.length); // 0 - 1.99999, needs to be rounded
         const option = this.state.options[randomNum];
-        alert(option);
+        this.setState(() => ({
+            selectedOption: option,
+        }));
     }
 
     handleAddOption = (option) => {
@@ -86,6 +91,13 @@ export default class IndecisionApp extends React.Component {
             )
         );
     }
+
+    handleClearSelectedOption = () => {
+        this.setState((prevState) => ({
+            selectedOption: !prevState.selectedOption,
+            // selectedOption: undefined,
+        }));
+    };
 
     render() {
 
@@ -114,6 +126,10 @@ export default class IndecisionApp extends React.Component {
                     options={this.state.options}
                     handleAddOption={this.handleAddOption}
                 // chained props, has alternative way of doing this
+                />
+                <OptionModal
+                    selectedOption={this.state.selectedOption}
+                    handleClearSelectedOption={this.handleClearSelectedOption}
                 />
             </div>
         )
