@@ -19,19 +19,50 @@ var IndecisionApp = function (_React$Component) {
         _this.handleDeleteOptions = _this.handleDeleteOptions.bind(_this);
         _this.handleAddOption = _this.handleAddOption.bind(_this);
         _this.handlePick = _this.handlePick.bind(_this);
+        _this.handleDeleteOption = _this.handleDeleteOption.bind(_this);
 
         _this.state = {
             // options: ['Thing One', 'Thing Two', 'Thing Three', 'Thing Four'],
-            options: []
+            options: props.options
         };
         return _this;
     }
+    // the very first time app got rendered 
+
 
     _createClass(IndecisionApp, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            console.log('componentDidMount!');
+        }
+    }, {
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate(prevProps, prevState) {
+            console.log('componentDidUpdate!');
+        }
+        // fire before component goes away
+
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            console.log('componentWillUnmount!');
+        }
+    }, {
         key: 'handleDeleteOptions',
         value: function handleDeleteOptions() {
             this.setState({
                 options: []
+            });
+        }
+    }, {
+        key: 'handleDeleteOption',
+        value: function handleDeleteOption(optionToRemove) {
+            this.setState(function (prevState) {
+                return {
+                    options: prevState.options.filter(function (option) {
+                        return optionToRemove !== option;
+                    })
+                };
             });
         }
     }, {
@@ -52,12 +83,13 @@ var IndecisionApp = function (_React$Component) {
             }
 
             this.setState(function (prevState) {
-                // prevState.options.push(option) we do not want to mutate the previos state
-                // create a new array, concat arrays
-                var newOptions = prevState.options.concat([option]);
-                return {
-                    options: newOptions
-                };
+                return (
+                    // prevState.options.push(option) we do not want to mutate the previos state
+                    // create a new array, concat arrays
+                    {
+                        options: prevState.options.concat([option])
+                    }
+                );
             });
         }
     }, {
@@ -79,33 +111,40 @@ var IndecisionApp = function (_React$Component) {
                     handlePick: this.handlePick }),
                 React.createElement(Options, {
                     options: this.state.options,
-                    handleDeleteOptions: this.handleDeleteOptions }),
+                    handleDeleteOptions: this.handleDeleteOptions,
+                    handleDeleteOption: this.handleDeleteOption
+                }),
                 React.createElement(AddOption, {
                     options: this.state.options,
-                    handleAddOption: this.handleAddOption })
+                    handleAddOption: this.handleAddOption
+                    // chained props, has alternative way of doing this
+                })
             );
         }
     }]);
 
     return IndecisionApp;
 }(React.Component);
-// can be stateless functional component
-// class Header extends React.Component {  // component is a class itself, must define render function
-//     render() {
-
-//         return (
-//             <div>
-//                 <h1>{this.props.title}</h1>
-//                 <h2>{this.props.subtitle}</h2>
-//             </div>
-//         );
-//     }
-// }
-
-// if class based should be this.props
+// still can cutomize it , good for reusable
 
 
-var Header = function Header(props) {
+IndecisionApp.defaultProps = {
+    options: []
+    // can be stateless functional component
+    // class Header extends React.Component {  // component is a class itself, must define render function
+    //     render() {
+
+    //         return (
+    //             <div>
+    //                 <h1>{this.props.title}</h1>
+    //                 <h2>{this.props.subtitle}</h2>
+    //             </div>
+    //         );
+    //     }
+    // }
+
+    // if class based should be this.props
+};var Header = function Header(props) {
     return React.createElement(
         'div',
         null,
@@ -114,12 +153,16 @@ var Header = function Header(props) {
             null,
             props.title
         ),
-        React.createElement(
+        props.subtitle && React.createElement(
             'h2',
             null,
             props.subtitle
         )
     );
+};
+
+Header.defaultProps = {
+    title: 'Indecision'
 };
 
 var Action = function Action(props) {
@@ -147,7 +190,11 @@ var Options = function Options(props) {
             'Remove All'
         ),
         props.options.map(function (option) {
-            return React.createElement(Option, { key: option, optionText: option });
+            return React.createElement(Option, {
+                key: option,
+                optionText: option,
+                handleDeleteOption: props.handleDeleteOption
+            });
         })
     );
 };
@@ -156,12 +203,15 @@ var Option = function Option(props) {
     return React.createElement(
         'div',
         null,
+        props.optionText,
         React.createElement(
-            'p',
-            null,
-            ' ',
-            props.optionText,
-            ' '
+            'button',
+            {
+                onClick: function onClick(e) {
+                    props.handleDeleteOption(props.optionText);
+                }
+            },
+            'Remove'
         )
     );
 };
