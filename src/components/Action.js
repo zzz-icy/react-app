@@ -19,6 +19,7 @@ const Action = (props) => (
         <button
             disabled={!props.hasOption} // if class based should be this.props
             onClick={props.handlePick}
+            className="big-button"
         >
             What should I do?
             </button>
