@@ -116,18 +116,19 @@ export default class IndecisionApp extends React.Component {
                     <Action
                         hasOption={this.state.options.length > 0}
                         handlePick={this.handlePick} />
+                    <div className="widget">
+                        <Options
+                            options={this.state.options}
+                            handleDeleteOptions={this.handleDeleteOptions}
+                            handleDeleteOption={this.handleDeleteOption}
+                        />
 
-                    <Options
-                        options={this.state.options}
-                        handleDeleteOptions={this.handleDeleteOptions}
-                        handleDeleteOption={this.handleDeleteOption}
-                    />
-
-                    <AddOption
-                        options={this.state.options}
-                        handleAddOption={this.handleAddOption}
-                    // chained props, has alternative way of doing this
-                    />
+                        <AddOption
+                            options={this.state.options}
+                            handleAddOption={this.handleAddOption}
+                        // chained props, has alternative way of doing this
+                        />
+                    </div>
                 </div>
                 <OptionModal
                     selectedOption={this.state.selectedOption}
