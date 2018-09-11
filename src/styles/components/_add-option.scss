@@ -1,0 +1,23 @@
+.add-option-error {
+    color: $off-white;
+    font-style: italic;
+    padding: 0 $m-size;
+    margin:  $m-size 0 0 0; // top right bottom left  or top/bottom right/left
+}
+
+
+// we want fixed button size, input field takes ip the rest space ans responsive to window size
+.add-option{
+    display: flex;
+    padding: $m-size;
+}
+
+.add-option__input{
+    flex-grow:1;
+    background:$dark-blue;
+    border: none;  // first reset all border and then customize yours
+    border-bottom:.2rem solid darken($dark-blue,10%); // sass reference functions
+    margin-right: $s-size;
+    color: $off-white;
+    padding: $s-size;
+}
