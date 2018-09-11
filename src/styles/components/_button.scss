@@ -1,3 +1,4 @@
+// big button
 .big-button {
 background: $purple;
 border: none;
@@ -12,4 +13,21 @@ padding: 2.4rem;
 
 .big-button:disabled{
 opacity: 0.5;
+}
+
+.button {
+    background: $purple;
+    border: none;
+    border-bottom:.2rem solid darken($purple,10%); // sass reference functions
+    color: white;
+    font-weight: 500;
+    padding: $s-size;
+}
+
+// rem modifier, use hyphen
+.button--link {
+    background: none;
+    border: none;
+    color: $off-white;
+    padding: 0;
 }

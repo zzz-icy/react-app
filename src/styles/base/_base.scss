@@ -15,6 +15,6 @@ button {
 
 }
 
-button:disabled{
+button:disabled{  //The :disabled selector matches every disabled element
     cursor: default;
 }
