@@ -3,6 +3,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import IndecisionApp from './components/IndecisionApp';
+// makes browsers render all elements more consistently and in line with modern standards. It precisely targets only the styles that need normalizing.
+import 'normalize.css/normalize.css';
 import './styles/styles.scss';
 
 // const Layout = (props) => {

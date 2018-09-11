@@ -18,7 +18,7 @@ module.exports = {
         },
         {
 
-            test: /\.scss$/,
+            test: /\.s?css$/,  //s? makes s optional
             use: [
                 'style-loader',
                 'css-loader',
