@@ -2,8 +2,8 @@ import React from 'react';
 
 // can not use export default here
 const Option = (props) => (
-    <div>
-        {props.optionText}
+    <div className="option">
+        <p className="option__text">{props.count}. {props.optionText}</p>
         <button
             className="button button--link"
             onClick={(e) => {
