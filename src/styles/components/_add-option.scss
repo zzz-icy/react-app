@@ -10,6 +10,8 @@
 .add-option{
     display: flex;
     padding: $m-size;
+    flex-direction: column; // // for small device, stack things vertically
+
 }
 
 .add-option__input{
@@ -18,7 +20,18 @@
     background:$dark-blue;
     border: none;  // first reset all border and then customize yours
     border-bottom:.2rem solid darken($dark-blue,10%); // sass reference functions
-    margin-right: $s-size;
+    // margin-right: $s-size;
+    margin:  0 0 $s-size 0; // for small device, need margin-bottom for input
     color: $off-white;
     padding: $s-size;
+}
+
+// less than 45 rem, apply the rule below
+@media (min-width: 45rem) {
+.add-option {
+    flex-direction: row;  // for large device, we will have things left to right
+}
+.add-option__input {
+    margin: 0 $s-size 0 0;  // for large device, need margin-right for input
+}
 }
