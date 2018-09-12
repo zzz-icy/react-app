@@ -8,12 +8,14 @@ const OptionModal = (props) => (<div>
         onRequestClose={props.handleClearSelectedOption} // take a funtion, close by click background or use Escape key
         // style={customStyles}
         contentLabel="Selected Option"
+        closeTimeoutMS={200}
+        className="modal"
     >
-        Selected Option
-            {props.selectedOption && <h3>{props.selectedOption}</h3>}
-        <button onClick={props.handleClearSelectedOption}> Okay </button>
+        <h3 className="modal__title">Selected Option</h3>
+        {props.selectedOption && <p className="modal__body">{props.selectedOption}</p>}
+        <button className="button" onClick={props.handleClearSelectedOption}> Okay </button>
     </Modal>
-</div>
+</div >
 );
 
 

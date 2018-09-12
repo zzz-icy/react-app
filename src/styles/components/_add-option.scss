@@ -13,6 +13,7 @@
 }
 
 .add-option__input{
+    // The flex-grow property specifies how much the item will grow relative to the rest of the flexible items inside the same container.
     flex-grow:1;
     background:$dark-blue;
     border: none;  // first reset all border and then customize yours
